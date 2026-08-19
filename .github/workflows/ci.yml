@@ -23,5 +23,22 @@ jobs:
           KEYCLOAK_ADMIN_PASSWORD: ci_placeholder
           KEYCLOAK_PORT: 8080
 
-  # TODO: เพิ่ม job build/test สำหรับ apps/web และ apps/policy-api เมื่อ scaffold เสร็จ
-  # (npm ci && npm run build / mvn verify)
+  web:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/web
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+
+  # TODO: เพิ่ม job build/test สำหรับ apps/policy-api เมื่อ scaffold เสร็จ (mvn verify)

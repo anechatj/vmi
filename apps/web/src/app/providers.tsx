@@ -10,6 +10,7 @@ const oidcConfig = {
   authority: 'http://localhost:8080/realms/vmi',
   client_id: 'vmi-web',
   redirect_uri: `${window.location.origin}/callback`,
+  post_logout_redirect_uri: window.location.origin,
   scope: 'openid profile email',
   onSigninCallback: () => {
     window.history.replaceState({}, document.title, window.location.pathname)

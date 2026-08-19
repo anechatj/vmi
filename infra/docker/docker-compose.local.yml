@@ -102,6 +102,7 @@ services:
       - "${KEYCLOAK_PORT}:8080"
     volumes:
       - ../keycloak:/opt/keycloak/data/import
+      - ../keycloak/themes/vmi:/opt/keycloak/themes/vmi
     networks:
       - vmi-network
 

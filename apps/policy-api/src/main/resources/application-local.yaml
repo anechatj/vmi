@@ -1,0 +1,30 @@
+# Local dev profile — เปิดใช้ผ่าน SPRING_PROFILES_ACTIVE=local (หรือ -Dspring.profiles.active=local)
+# ค่า default ตรงกับ infra/docker/docker-compose.local.yml — override ผ่าน env var ได้ถ้าจำเป็น
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5433/vmi
+    username: ${DB_USERNAME:vmi_user}
+    password: ${DB_PASSWORD:changeme_local_only}
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: ${REDIS_PASSWORD:changeme_local_only}
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          # ใช้ jwk-set-uri ตรงๆ แทน issuer-uri — issuer-uri ทำให้ Spring เรียก
+          # /.well-known/openid-configuration แบบ synchronous ตอน bean startup ถ้า Keycloak
+          # ไม่พร้อมตอนนั้นพอดี app จะ start ไม่ขึ้นเลย ส่วน jwk-set-uri ดึง key แบบ lazy
+          # (ครั้งแรกที่ validate token จริง) ทำให้ app start ได้ไม่ผูกกับ Keycloak ต้อง up ก่อนเสมอ
+          jwk-set-uri: http://localhost:8080/realms/vmi/protocol/openid-connect/certs
+
+management:
+  endpoint:
+    health:
+      show-details: always
+
+logging:
+  level:
+    com.vmi.policyapi: DEBUG

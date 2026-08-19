@@ -1,0 +1,20 @@
+package com.vmi.policyapi;
+
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
+import org.springframework.context.annotation.Bean;
+import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.testcontainers.utility.DockerImageName;
+
+@TestConfiguration(proxyBeanMethods = false)
+class TestcontainersConfiguration {
+
+	@Bean
+	@ServiceConnection
+	PostgreSQLContainer postgresContainer() {
+		// pin ให้ตรงกับ postgres:16-alpine ที่ใช้ใน infra/docker/docker-compose.local.yml
+		// เพื่อไม่ให้ test เจอพฤติกรรมที่ต่างจาก environment จริง
+		return new PostgreSQLContainer(DockerImageName.parse("postgres:16-alpine"));
+	}
+
+}

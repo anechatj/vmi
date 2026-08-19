@@ -6,6 +6,12 @@
       "runtimeExecutable": "npm",
       "runtimeArgs": ["--prefix", "apps/web", "run", "dev"],
       "port": 5173
+    },
+    {
+      "name": "policy-api",
+      "runtimeExecutable": "apps/policy-api/mvnw.cmd",
+      "runtimeArgs": ["spring-boot:run", "-Dspring-boot.run.profiles=local"],
+      "port": 8081
     }
   ]
 }

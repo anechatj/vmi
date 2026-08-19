@@ -1,0 +1,32 @@
+spring:
+  application:
+    name: policy-api
+  jpa:
+    # ปิด Open Session in View — เปิดไว้ (default) จะซ่อนปัญหา N+1 และดึง connection ค้างไว้
+    # นานกว่าที่ควรจนกว่า view render เสร็จ อันตรายเวลามี concurrent load สูง
+    open-in-view: false
+    hibernate:
+      # schema ทั้งหมดต้องมาจาก Flyway migration เท่านั้น ห้ามให้ Hibernate auto-generate
+      ddl-auto: validate
+  flyway:
+    locations: classpath:db/migration
+
+server:
+  port: 8081
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+
+# ตัวอย่าง structured logging (JSON) สำหรับตอน deploy จริง — ยังไม่เปิดใช้ตอน local
+# เพราะอ่านยากกว่า plain text ระหว่าง dev เปิดใน application-prod.yaml เมื่อมี environment นั้นจริง
+# logging:
+#   structured:
+#     format:
+#       console: ecs

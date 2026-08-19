@@ -1,0 +1,28 @@
+package com.vmi.policyapi;
+
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertySource;
+
+/**
+ * Base class สำหรับ integration test ที่ต้องการ full ApplicationContext จริง
+ * (PostgreSQL ผ่าน Testcontainers, JwtDecoder แบบ lazy) — extend จากนี้แทนที่จะเขียน
+ * @Import(TestcontainersConfiguration.class) + @SpringBootTest ซ้ำทุกไฟล์
+ *
+ * หมายเหตุ: @DynamicPropertySource ต้องอยู่ในตัว test class เอง (หรือ base class ที่ extend)
+ * เท่านั้น — เขียนไว้ใน @Import class เฉยๆ (เช่น TestcontainersConfiguration) แล้ว Spring
+ * TestContext จะไม่เห็นและไม่เรียกให้
+ */
+@Import(TestcontainersConfiguration.class)
+@SpringBootTest
+abstract class AbstractIntegrationTest {
+
+	@DynamicPropertySource
+	static void jwtProperties(DynamicPropertyRegistry registry) {
+		registry.add(
+			"spring.security.oauth2.resourceserver.jwt.jwk-set-uri",
+			() -> "http://localhost:8080/realms/vmi/protocol/openid-connect/certs");
+	}
+
+}

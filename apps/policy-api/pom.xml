@@ -200,6 +200,22 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- *IT.java (เช่น CoverageTypeControllerIT) คือ integration test — surefire
+				(mvn test) ไม่รันให้ ต้อง mvn verify ถึงจะรัน ไฟล์เหล่านี้ผ่าน failsafe
+				เพื่อแยก test ที่ต้องใช้ Docker/Testcontainers (ช้า) ออกจาก unit test (เร็ว)
+				ที่ควรรันบ่อยๆ ระหว่าง dev -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-failsafe-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>integration-test</goal>
+							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
 		</plugins>
 	</build>
 

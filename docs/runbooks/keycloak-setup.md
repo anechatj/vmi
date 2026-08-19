@@ -32,9 +32,11 @@ Flow ที่ใช้คือ OAuth2 **Authorization Code Flow**: ผู้�
 
 > เมื่อ `apps/web` ตั้ง dev server port อื่นที่ไม่ใช่ 5173 ต้องกลับมาแก้ค่านี้ใน Admin Console (Clients → vmi-web → Login settings) แล้ว export realm ใหม่ทับไฟล์เดิม
 
-### Role
-- **Name**: `policy-officer`
-- Realm role ธรรมดา ยังไม่มี permission ผูกจริง (จะผูกกับ endpoint ตอนเขียน `apps/policy-api`)
+### Roles
+| Name | ใช้ทำอะไร |
+|---|---|
+| `policy-officer` | อ่านข้อมูล master/policy ทั่วไป — endpoint GET ทุกตัวเปิดให้ authenticated user (ทุก role) อยู่แล้ว |
+| `admin` | เขียน/แก้/ลบข้อมูล master data — ผูกกับ `@PreAuthorize("hasRole('admin')")` ใน `CoverageTypeController` เป็นตัวแรก |
 
 ### Test user
 | Field | Value |
@@ -42,7 +44,7 @@ Flow ที่ใช้คือ OAuth2 **Authorization Code Flow**: ผู้�
 | Username | `officer.test` |
 | Password | `Test1234!` |
 | Email | officer.test@vmi.local |
-| Role | `policy-officer` |
+| Roles | `policy-officer`, `admin` (มีทั้งคู่ เพื่อทดสอบทั้ง read และ write flow จาก user เดียว) |
 | Temporary password | Off (login ซ้ำได้โดยไม่ถูกบังคับเปลี่ยนรหัส) |
 
 ⚠️ **Credential นี้เป็น local dev เท่านั้น** ไม่ใช่ secret จริง — ไม่มีผลกระทบถ้าหลุด เพราะ Keycloak รันอยู่ใน Docker บนเครื่อง local ไม่เปิดสู่ network ภายนอก และ partial export **ไม่รวม user นี้ไว้** (ต้องสร้างใหม่เองถ้า `docker compose down -v`)

@@ -16,13 +16,17 @@ import org.springframework.test.context.DynamicPropertySource;
  */
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
-abstract class AbstractIntegrationTest {
+public abstract class AbstractIntegrationTest {
 
 	@DynamicPropertySource
-	static void jwtProperties(DynamicPropertyRegistry registry) {
+	static void testProperties(DynamicPropertyRegistry registry) {
 		registry.add(
 			"spring.security.oauth2.resourceserver.jwt.jwk-set-uri",
 			() -> "http://localhost:8080/realms/vmi/protocol/openid-connect/certs");
+		// ไม่มี Redis Testcontainer ใน test context นี้ (แค่ Postgres) — ปิด caching ระหว่าง
+		// test เพื่อไม่ให้ @Cacheable พยายามต่อ Redis จริงที่เครื่อง dev (ซึ่งต้อง password
+		// ที่ test ไม่รู้) พฤติกรรม caching เองถูก verify แยกด้วยการรันแอปจริงคู่กับ Redis จริง
+		registry.add("spring.cache.type", () -> "none");
 	}
 
 }

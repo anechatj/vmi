@@ -1,8 +1,12 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { renderHook, waitFor } from '@testing-library/react'
 import type { ReactNode } from 'react'
-import { describe, expect, it } from 'vitest'
-import { usePolicies } from './usePolicies'
+import { describe, expect, it, vi } from 'vitest'
+import { useCoverageTypes } from './useCoverageTypes'
+
+vi.mock('react-oidc-context', () => ({
+  useAuth: () => ({ user: { access_token: 'fake-token' } }),
+}))
 
 function createWrapper() {
   const queryClient = new QueryClient({
@@ -13,13 +17,13 @@ function createWrapper() {
   )
 }
 
-describe('usePolicies', () => {
-  it('fetches policies via MSW-mocked API', async () => {
-    const { result } = renderHook(() => usePolicies(), { wrapper: createWrapper() })
+describe('useCoverageTypes', () => {
+  it('fetches coverage types via MSW-mocked API', async () => {
+    const { result } = renderHook(() => useCoverageTypes(), { wrapper: createWrapper() })
 
     await waitFor(() => expect(result.current.isSuccess).toBe(true))
 
     expect(result.current.data).toHaveLength(2)
-    expect(result.current.data?.[0]?.policyNumber).toBe('VMI-0001')
+    expect(result.current.data?.[0]?.code).toBe('CMI')
   })
 })

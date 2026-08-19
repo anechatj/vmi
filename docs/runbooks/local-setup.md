@@ -55,6 +55,7 @@ make clean      # หยุดและลบ volume (ข้อมูลหา�
 ```
 
 ## Next steps (ยังไม่เสร็จ — TODO)
-- เขียน entity/migration แรกใน `apps/policy-api` (ยังไม่มี table ใดๆ เลยตอนนี้ — Flyway validate ผ่านเพราะ schema ว่างเปล่า)
-- ต่อ `apps/web` เข้ากับ `apps/policy-api` จริงผ่าน typed client (`packages/api-client`) แทน placeholder fetch ปัจจุบัน
+- `apps/web` ต่อเข้ากับ `apps/policy-api` จริงแล้ว (หน้า `/coverage-types` เรียก `GET /api/v1/master/coverage-types` ตรงๆ ผ่าน `VITE_API_BASE_URL`) — ยังใช้ raw `fetch` อยู่ ยังไม่ได้เปลี่ยนเป็น typed client จาก `packages/api-client`
+- vertical slice อื่นนอกจาก `master/coverage-type` ยังไม่มี (เช่น policy จริง)
 - ถ้า API ไม่ตอบสนองหลัง start ให้ดู [troubleshoot-api-unhealthy.md](troubleshoot-api-unhealthy.md)
+- ถ้าอยากเปลี่ยน credential ให้จำง่ายเหมือนเครื่องหลัก ดู [change-local-credentials.md](change-local-credentials.md)

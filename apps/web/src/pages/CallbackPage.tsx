@@ -9,5 +9,5 @@ export function CallbackPage() {
     return <div className="p-8 text-center text-slate-500">กำลังเข้าสู่ระบบ...</div>
   }
 
-  return <Navigate to="/policies" replace />
+  return <Navigate to="/coverage-types" replace />
 }

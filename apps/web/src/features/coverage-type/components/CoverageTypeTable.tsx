@@ -1,14 +1,12 @@
 import { useRef } from 'react'
 import { useVirtualizer } from '@tanstack/react-virtual'
-import type { Policy } from '@/features/policy/types'
+import type { CoverageType } from '@/features/coverage-type/types'
 
-// ใช้ list virtualization เพราะรายการกรมธรรม์อาจมีหลักพัน/หมื่นแถว
-// render เฉพาะแถวที่อยู่ใน viewport เท่านั้น
-export function PolicyTable({ policies }: { policies: Policy[] }) {
+export function CoverageTypeTable({ coverageTypes }: { coverageTypes: CoverageType[] }) {
   const parentRef = useRef<HTMLDivElement>(null)
 
   const virtualizer = useVirtualizer({
-    count: policies.length,
+    count: coverageTypes.length,
     getScrollElement: () => parentRef.current,
     estimateSize: () => 44,
   })
@@ -17,17 +15,17 @@ export function PolicyTable({ policies }: { policies: Policy[] }) {
     <div ref={parentRef} className="h-[480px] overflow-auto rounded-md border border-slate-200">
       <div style={{ height: virtualizer.getTotalSize(), position: 'relative' }}>
         {virtualizer.getVirtualItems().map((row) => {
-          const policy = policies[row.index]
-          if (!policy) return null
+          const coverageType = coverageTypes[row.index]
+          if (!coverageType) return null
           return (
             <div
-              key={policy.id}
+              key={coverageType.id}
               className="absolute left-0 top-0 flex w-full items-center gap-4 border-b border-slate-100 px-4 text-sm"
               style={{ height: row.size, transform: `translateY(${row.start}px)` }}
             >
-              <span className="w-32 font-medium text-slate-900">{policy.policyNumber}</span>
-              <span className="flex-1 text-slate-600">{policy.insuredName}</span>
-              <span className="text-slate-500">{policy.status}</span>
+              <span className="w-24 font-medium text-slate-900">{coverageType.code}</span>
+              <span className="flex-1 text-slate-600">{coverageType.name}</span>
+              <span className="text-slate-500">{coverageType.active ? 'active' : 'inactive'}</span>
             </div>
           )
         })}

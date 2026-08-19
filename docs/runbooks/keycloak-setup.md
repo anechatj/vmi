@@ -61,7 +61,7 @@ Login ด้วย `officer.test` / `Test1234!` แล้วสังเกต U
 
 - **Assign role ให้ user แล้ว "No search results"** — ต้องเปลี่ยน dropdown จาก "Filter by clients" เป็น **"Filter by realm roles"** ก่อนค้นหา ไม่งั้นจะเห็นแต่ role ของ client อื่น (account, broker, realm-management)
 - **Login ครั้งแรกโดน redirect ไปหน้า "Update Account Information"** — เพราะ field email เป็น required by default ของ realm ใหม่ กรอกแล้ว submit ผ่านได้ปกติ
-- **`vmi_user` (PostgreSQL) ≠ `officer.test` (Keycloak)** — คนละระบบกันคนละหน้าที่ อย่าสับสน (`vmi_user` คือ DB credential ที่ `apps/policy-api` ใช้เชื่อม Postgres เท่านั้น ไม่เกี่ยวกับ login หน้าเว็บ)
+- **`admin` (PostgreSQL) ≠ `admin` (Keycloak realm `vmi`)** — ชื่อเดียวกันแต่คนละระบบกันคนละหน้าที่โดยสิ้นเชิง อย่าสับสน (`admin` ฝั่ง PostgreSQL คือ DB credential ที่ `apps/policy-api` ใช้เชื่อม Postgres เท่านั้น ไม่เกี่ยวกับ login หน้าเว็บ — เดิมชื่อ `vmi_user` เลยไม่ชนกับ `officer.test`/`admin` ฝั่ง Keycloak แต่หลังเปลี่ยน credential ให้จำง่ายแล้วชื่อชนกัน ดู [change-local-credentials.md](change-local-credentials.md))
 
 ## อัปเดต config ในอนาคต
 

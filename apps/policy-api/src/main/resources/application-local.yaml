@@ -2,9 +2,9 @@
 # ค่า default ตรงกับ infra/docker/docker-compose.local.yml — override ผ่าน env var ได้ถ้าจำเป็น
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/vmi
-    username: ${DB_USERNAME:vmi_user}
-    password: ${DB_PASSWORD:changeme_local_only}
+    url: jdbc:postgresql://localhost:${DB_PORT:5433}/vmi
+    username: ${DB_USERNAME:admin}
+    password: ${DB_PASSWORD:Test1234!}
   data:
     redis:
       host: localhost

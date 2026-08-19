@@ -106,7 +106,7 @@ Realm `vmi` (client `vmi-web`, role `policy-officer`/`admin`) **import อัต
 
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:8080/realms/master/protocol/openid-connect/token \
-  -d "client_id=admin-cli" -d "username=admin" -d "password=changeme_local_only" -d "grant_type=password" \
+  -d "client_id=admin-cli" -d "username=admin" -d "password=Test1234!" -d "grant_type=password" \
   | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4)
 
 curl -s -X POST "http://localhost:8080/admin/realms/vmi/users" \

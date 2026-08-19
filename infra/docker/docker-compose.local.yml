@@ -8,7 +8,7 @@ services:
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -54,6 +54,21 @@ services:
     entrypoint: ["/bin/sh", "/init/init-buckets.sh"]
     volumes:
       - ../minio/init-buckets.sh:/init/init-buckets.sh:ro
+    networks:
+      - vmi-network
+
+  # Web UI สำหรับ browse ข้อมูลใน PostgreSQL (postgres เองไม่มี web UI ในตัว)
+  adminer:
+    image: adminer:latest
+    container_name: vmi-adminer
+    restart: unless-stopped
+    environment:
+      ADMINER_DEFAULT_SERVER: postgres
+    ports:
+      - "8081:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - vmi-network
 

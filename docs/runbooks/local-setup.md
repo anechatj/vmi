@@ -29,10 +29,11 @@ docker compose -f infra/docker/docker-compose.local.yml --env-file infra/docker/
 
 | Service | วิธีเช็ค | ผลที่คาดหวัง |
 |---|---|---|
-| PostgreSQL | `docker compose -f infra/docker/docker-compose.local.yml ps postgres` | STATUS = healthy |
+| PostgreSQL | `docker compose -f infra/docker/docker-compose.local.yml ps postgres` | STATUS = healthy — เชื่อมจากเครื่อง host ที่ `localhost:5433` (ไม่ใช่ 5432 เพื่อเลี่ยงชนกับ native PostgreSQL ที่อาจติดตั้งไว้อยู่แล้ว) |
 | MinIO Console | เปิด http://localhost:9001 | login ด้วยค่าใน `.env` ได้ |
 | MinIO bucket | ดู log ของ `vmi-minio-init`: `docker compose -f infra/docker/docker-compose.local.yml logs minio-init` | เห็นข้อความ "MinIO bucket setup complete" |
 | Keycloak | เปิด http://localhost:8080 | หน้า admin console ขึ้น |
+| Adminer (DB web UI) | เปิด http://localhost:8081 | หน้า login ขึ้น — กรอก System: PostgreSQL, Server: `postgres`, Username/Password ตาม `.env`, Database: `vmi` |
 
 ## 4. Stop / clean up
 ```bash

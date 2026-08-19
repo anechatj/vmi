@@ -1,0 +1,27 @@
+# environment (secrets — never commit)
+.env
+infra/docker/.env
+
+# node
+node_modules/
+dist/
+build/
+
+# java / maven / gradle
+target/
+*.class
+.gradle/
+
+# generated api client (regenerate via `make generate-client`)
+packages/api-client/generated/*
+!packages/api-client/generated/.gitkeep
+
+# IDE
+.idea/
+*.iml
+.vscode/*
+!.vscode/extensions.json
+
+# os
+.DS_Store
+Thumbs.db

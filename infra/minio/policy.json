@@ -1,0 +1,22 @@
+{
+  "_comment": "ตัวอย่าง least-privilege IAM policy สำหรับ policy-api service role บน AWS S3 (production/SIT) — ไม่ได้ apply อัตโนมัติกับ MinIO local, เก็บไว้เป็น reference ตาม docs/adr/0004-store-attachments-in-s3.md",
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Sid": "AllowPolicyApiObjectAccess",
+      "Effect": "Allow",
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:DeleteObject"
+      ],
+      "Resource": "arn:aws:s3:::vmi-attachments-prod/*"
+    },
+    {
+      "Sid": "AllowListBucket",
+      "Effect": "Allow",
+      "Action": "s3:ListBucket",
+      "Resource": "arn:aws:s3:::vmi-attachments-prod"
+    }
+  ]
+}

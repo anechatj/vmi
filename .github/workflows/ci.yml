@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-infra:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate docker compose config
+        run: docker compose -f infra/docker/docker-compose.local.yml config
+        env:
+          POSTGRES_DB: vmi
+          POSTGRES_USER: vmi_user
+          POSTGRES_PASSWORD: ci_placeholder
+          MINIO_ROOT_USER: minioadmin
+          MINIO_ROOT_PASSWORD: ci_placeholder
+          MINIO_BUCKET_NAME: vmi-attachments
+          KEYCLOAK_ADMIN: admin
+          KEYCLOAK_ADMIN_PASSWORD: ci_placeholder
+          KEYCLOAK_PORT: 8080
+
+  # TODO: เพิ่ม job build/test สำหรับ apps/web และ apps/policy-api เมื่อ scaffold เสร็จ
+  # (npm ci && npm run build / mvn verify)

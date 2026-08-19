@@ -1,0 +1,14 @@
+# TODO (future phase): compose สำหรับ SIT environment
+# แนวทางที่วางไว้ (ยังไม่ implement ตามที่ตกลงว่าเฟสนี้เน้น local ก่อน — ดู README.md):
+#   - nginx เป็น reverse proxy หน้า apps/web และ apps/policy-api
+#   - ต่อ RDS/S3 จริงแทน container postgres/minio ผ่าน environment variables
+#   - policy-api และ web build เป็น image แล้ว deploy บน Lightsail/EC2
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: vmi-nginx-sit
+    volumes:
+      - ../nginx:/etc/nginx/conf.d:ro
+    ports:
+      - "80:80"

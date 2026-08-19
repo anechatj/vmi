@@ -36,7 +36,7 @@ make up
 ## เอกสารสำคัญ
 
 - **Architecture Decision Records**: [docs/adr/](docs/adr/) — ทุกการตัดสินใจทางเทคนิคที่มีผลระยะยาว ต้องมี ADR พร้อม alternatives ที่พิจารณาแล้ว (ดูเทมเพลตที่ [0000-adr-template.md](docs/adr/0000-adr-template.md))
-- **Runbooks**: [docs/runbooks/](docs/runbooks/) — ขั้นตอนแก้ปัญหาที่เกิดซ้ำได้ (ดูเทมเพลตที่ [0000-runbook-template.md](docs/runbooks/0000-runbook-template.md))
+- **Runbooks**: [docs/runbooks/](docs/runbooks/) — ขั้นตอนแก้ปัญหาที่เกิดซ้ำได้ (ดูเทมเพลตที่ [0000-runbook-template.md](docs/runbooks/0000-runbook-template.md)) รวมถึง [keycloak-setup.md](docs/runbooks/keycloak-setup.md) สำหรับ config realm/client/role/test user
 - **Architecture**: [docs/architecture/system-context.md](docs/architecture/system-context.md)
 
 ## Roadmap

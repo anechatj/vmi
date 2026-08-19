@@ -76,8 +76,8 @@ services:
     image: quay.io/keycloak/keycloak:25.0
     container_name: vmi-keycloak
     restart: unless-stopped
-    # เพิ่ม --import-realm หลังวาง realm export ไว้ที่ infra/keycloak/ (ดู README ในโฟลเดอร์นั้น)
-    command: start-dev
+    # import realm config อัตโนมัติจาก infra/keycloak/vmi-realm.json ทุกครั้งที่ container start
+    command: start-dev --import-realm
     environment:
       KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
       KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}

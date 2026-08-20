@@ -102,6 +102,15 @@ docker compose -f infra/docker/docker-compose.local.yml --env-file infra/docker/
 
 Realm `vmi` (client `vmi-web`, role `policy-officer`/`admin`) **import อัตโนมัติ** จาก `infra/keycloak/vmi-realm.json` — ไม่ต้องตั้งเองใหม่
 
+**PostgreSQL คือ 18** (`postgres:18-alpine`) — เครื่องใหม่ที่ไม่เคยรันมาก่อนไม่ต้องทำอะไรเพิ่ม `docker compose up` ดึง image ให้เองตาม `docker-compose.local.yml`
+
+> **Troubleshoot**: ถ้าเครื่องนี้เคยรัน infra ของโปรเจกต์นี้มาก่อนตอนยังเป็น PostgreSQL 16 (มี volume `docker_postgres_data` เก่าค้างอยู่) จะเจอ error ประมาณ `"in 18+, these Docker images are configured to store database data in a format..."` ตอน `vmi-postgres` พยายาม start — สาเหตุคือ PG 18 เปลี่ยนทั้ง data format และจุด mount volume (`/var/lib/postgresql` ไม่ใช่ `/var/lib/postgresql/data` เหมือนเดิม) ทำให้ volume เก่าใช้กับ image ใหม่ไม่ได้เลย ไม่มีทาง in-place upgrade ต้องลบ volume เก่าทิ้งแล้วให้ migration สร้างข้อมูลใหม่ทั้งหมด (ข้อมูลใน `coverage_type`/master tables เป็น seed data ที่ migrate ใหม่ได้อยู่แล้ว ไม่ใช่ของที่ต้องเก็บ):
+> ```bash
+> docker compose -f infra/docker/docker-compose.local.yml --env-file infra/docker/.env down
+> docker volume rm docker_postgres_data
+> docker compose -f infra/docker/docker-compose.local.yml --env-file infra/docker/.env up -d
+> ```
+
 ## Phase 5: สร้าง test user (Keycloak ไม่ export user ให้ ต้องสร้างใหม่ทุกเครื่อง)
 
 ```bash
@@ -144,6 +153,8 @@ cd apps/policy-api
 SPRING_PROFILES_ACTIVE=local ./mvnw spring-boot:run
 ```
 
+`spring-boot:run` ครั้งแรกจะรัน Flyway migration `V2`–`V46` อัตโนมัติ (สร้าง master data ~26 ตาราง พร้อม seed ข้อมูลจริงจากระบบเดิม เช่น `car_models` 1,829 แถว, `sub_districts` 7,440 แถว) ใช้เวลานานกว่าเดิมพอสมควร (หลักสิบวินาที) รอจน log ขึ้น `Schema "public" is up to date` ถือว่าเสร็จ ไม่ใช่ค้าง
+
 ## Verify ว่า setup สำเร็จจริง
 
 ```bash
@@ -158,6 +169,11 @@ curl -s -X POST http://localhost:8080/realms/vmi/protocol/openid-connect/token \
   | grep -o '"access_token":"[^"]*"' | cut -d'"' -f4
 ```
 → ลอง GET `/api/v1/master/coverage-types` ด้วย parameter `{"page": 0, "size": 20}` (ห้ามใส่ `sort` เป็น array ผ่าน Swagger UI — ดูเหตุผลใน [keycloak-setup.md](keycloak-setup.md) และประวัติแชท) → ควรได้ 200
+
+**master table อื่นๆ (titles, provinces, car_makes ฯลฯ) ยังไม่มี REST endpoint** — มีแค่ table + seed data ผ่าน migration เท่านั้น ยังไม่มี Entity/Service/Controller (ยกเว้น `coverage_type`) เพราะงั้น verify ตัวอื่นต้องเช็คตรงที่ DB แทน ผ่าน Adminer (`http://localhost:8082`, server `postgres`, user/pass ตาม `.env`) หรือ:
+```bash
+docker exec vmi-postgres psql -U admin -d vmi -c "SELECT count(*) FROM car_models;"   # คาดหวัง 1829
+```
 
 ---
 

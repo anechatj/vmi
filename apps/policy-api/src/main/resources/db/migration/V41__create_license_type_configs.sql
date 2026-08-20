@@ -1,0 +1,29 @@
+-- ตาราง config ไม่ใช่ simple lookup — ไม่มี code/name_th/name_en/order_position เพราะเป็นกฎ
+-- จับคู่ license_type + province_filter + country_filter ไม่ใช่ "รายการให้เลือก"
+CREATE TABLE license_type_configs (
+    id                    UUID          PRIMARY KEY DEFAULT uuidv7(),
+    car_license_type_id   UUID          NOT NULL REFERENCES car_license_types(id),
+    province_filter       VARCHAR(20)   NOT NULL,
+    country_filter        VARCHAR(20)   NOT NULL,
+    active_flag           BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at             TIMESTAMPTZ   NOT NULL,
+    created_by              VARCHAR(100)  NOT NULL,
+    updated_at               TIMESTAMPTZ   NOT NULL,
+    updated_by                VARCHAR(100)  NOT NULL,
+    version                    BIGINT        NOT NULL DEFAULT 0,
+
+    CONSTRAINT uq_license_type_configs_rule UNIQUE (car_license_type_id, province_filter, country_filter)
+);
+
+CREATE INDEX idx_license_type_configs_car_license_type_id ON license_type_configs(car_license_type_id);
+
+COMMENT ON TABLE license_type_configs IS 'กฎจับคู่ประเภททะเบียนรถ (car_license_types) กับจังหวัด/ประเทศที่ใช้ได้ — province_filter/country_filter เป็นค่า filter (เช่น ALL, THA, NON_THA หรือรหัสเฉพาะ) ไม่ใช่ FK ไปตารางจริง เพราะ ALL เป็น wildcard';
+
+-- seed จากข้อมูลจริง legacy master.LicenseTypeConfig (5 แถว)
+INSERT INTO license_type_configs (car_license_type_id, province_filter, country_filter, active_flag, created_at, created_by, updated_at, updated_by)
+VALUES
+    ((SELECT id FROM car_license_types WHERE code = 'REGIST'), 'ALL', 'THA', TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ((SELECT id FROM car_license_types WHERE code = 'TEMP'), 'ปด', 'THA', TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ((SELECT id FROM car_license_types WHERE code = 'UNREGIST'), 'นท', 'THA', TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ((SELECT id FROM car_license_types WHERE code = 'GOVT'), 'รช', 'THA', TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ((SELECT id FROM car_license_types WHERE code = 'FOREIGN'), 'ตป', 'NON_THA', TRUE, now(), 'SYSTEM', now(), 'SYSTEM');

@@ -1,0 +1,16 @@
+CREATE TABLE car_usage_categories (
+    id             UUID          PRIMARY KEY DEFAULT uuidv7(),
+    code           VARCHAR(20)   NOT NULL,
+    name_th        VARCHAR(100)  NOT NULL,
+    name_en        VARCHAR(100),
+    order_position INT           NOT NULL DEFAULT 0,
+    active_flag    BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at     TIMESTAMPTZ   NOT NULL,
+    created_by     VARCHAR(100)  NOT NULL,
+    updated_at     TIMESTAMPTZ   NOT NULL,
+    updated_by     VARCHAR(100)  NOT NULL,
+    version        BIGINT        NOT NULL DEFAULT 0,
+    CONSTRAINT uq_car_usage_categories_code UNIQUE (code)
+);
+
+COMMENT ON TABLE car_usage_categories IS 'ข้อมูลอ้างอิงกลุ่มการใช้รถ: ส่วนบุคคล / รับจ้าง-ให้เช่า / สาธารณะ — ยังไม่มี seed data จริง รอรายการจากธุรกิจ';

@@ -1,0 +1,23 @@
+CREATE TABLE identification_types (
+    id             UUID          PRIMARY KEY DEFAULT uuidv7(),
+    code           VARCHAR(20)   NOT NULL,
+    name_th        VARCHAR(50)   NOT NULL,
+    name_en        VARCHAR(50),
+    order_position INT           NOT NULL DEFAULT 0,
+    active_flag    BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at     TIMESTAMPTZ   NOT NULL,
+    created_by     VARCHAR(100)  NOT NULL,
+    updated_at     TIMESTAMPTZ   NOT NULL,
+    updated_by     VARCHAR(100)  NOT NULL,
+    version        BIGINT        NOT NULL DEFAULT 0,
+    CONSTRAINT uq_identification_types_code UNIQUE (code)
+);
+
+COMMENT ON TABLE identification_types IS 'ข้อมูลอ้างอิงประเภทบัตร/ประเภทบุคคลผู้เอาประกัน เช่น บุคคลธรรมดา, นิติบุคคล';
+
+INSERT INTO identification_types (code, name_th, name_en, order_position, created_at, created_by, updated_at, updated_by)
+VALUES
+    ('INDIVIDUAL', 'บุคคลธรรมดา', 'Individual', 1, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('CORPORATE',  'นิติบุคคล',   'Corporate',  2, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('FOREIGNER',  'ชาวต่างชาติ', 'Foreigner',  3, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('OTHER',      'อื่น ๆ',      'Other',      4, now(), 'SYSTEM', now(), 'SYSTEM');

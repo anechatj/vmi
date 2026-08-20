@@ -1,0 +1,19 @@
+CREATE TABLE car_variants (
+    id             UUID          PRIMARY KEY DEFAULT uuidv7(),
+    code           VARCHAR(20)   NOT NULL,
+    name_th        VARCHAR(150)  NOT NULL,
+    name_en        VARCHAR(150),
+    car_model_id   UUID          NOT NULL REFERENCES car_models(id),
+    order_position INT           NOT NULL DEFAULT 0,
+    active_flag    BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at     TIMESTAMPTZ   NOT NULL,
+    created_by     VARCHAR(100)  NOT NULL,
+    updated_at     TIMESTAMPTZ   NOT NULL,
+    updated_by     VARCHAR(100)  NOT NULL,
+    version        BIGINT        NOT NULL DEFAULT 0,
+    CONSTRAINT uq_car_variants_code UNIQUE (code)
+);
+
+CREATE INDEX idx_car_variants_car_model_id ON car_variants(car_model_id);
+
+COMMENT ON TABLE car_variants IS 'ข้อมูลอ้างอิงรุ่นย่อยรถ — legacy ไม่มีตารางระดับนี้ (มีแค่ CarMake/CarModel) ยังไม่มี seed data จริง รอรายการจากธุรกิจ';

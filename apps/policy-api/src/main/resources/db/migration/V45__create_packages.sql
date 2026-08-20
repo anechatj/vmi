@@ -1,0 +1,63 @@
+-- แพ็กเกจ (จาก legacy master.Package) — 1 แถว = 1 ชุดราคาที่ตั้งไว้จริง (code = i_pattern_new เดิม)
+-- pattern_code (เดิม i_pattern) เก็บไว้เป็นข้อมูลดิบเฉยๆ ไม่ทำ FK — ตรวจสอบกับข้อมูลจริงแล้วพบว่า
+-- ทุกแถวมีค่าเดียวกันหมด ('320') ความหมายทางธุรกิจยังไม่ชัด รอ confirm ทีหลังว่าต้องใช้ทำอะไรจริงไหม
+CREATE TABLE packages (
+    id                      UUID          PRIMARY KEY DEFAULT uuidv7(),
+    code                    VARCHAR(20)   NOT NULL,
+    name                    VARCHAR(200),
+    risc_code               VARCHAR(30),
+    motor_insurance_type_id UUID          NOT NULL REFERENCES motor_insurance_types(id),
+    usage_code              VARCHAR(5),
+    pattern_code            VARCHAR(10),
+    package_cover_id        UUID          REFERENCES package_covers(id),
+    business_line           VARCHAR(20),
+    type_code                VARCHAR(10),
+    net_amount               NUMERIC(12,2),
+    duty_amount               NUMERIC(12,2),
+    tax_amount                 NUMERIC(12,2),
+    gross_amount                NUMERIC(12,2),
+    base_amount                  NUMERIC(10,2),
+    cover_main_amount             NUMERIC(10,2),
+    prem_app_amount                NUMERIC(10,2),
+    disc_f_amount                   NUMERIC(10,2),
+    disc_drv_amount                  NUMERIC(10,2),
+    disc_grp_percent                  NUMERIC(5,2),
+    disc_grp_amount                    NUMERIC(10,2),
+    disc_rec_percent                    NUMERIC(5,2),
+    disc_rec_amount                      NUMERIC(10,2),
+    disc_oth_percent                      NUMERIC(5,2),
+    disc_oth_amount                        NUMERIC(10,2),
+    disc_cctv_percent                       NUMERIC(5,2),
+    disc_cctv_amount                         NUMERIC(10,2),
+    add_rec_percent                           NUMERIC(5,2),
+    add_rec_amount                             NUMERIC(10,2),
+    effective_from                              DATE,
+    effective_to                                 DATE,
+    min_car_age                                   INT,
+    max_car_age                                    INT,
+    active_flag                                     BOOLEAN       NOT NULL DEFAULT TRUE,
+    cancelled_at                                      TIMESTAMPTZ,
+    cancelled_by                                        VARCHAR(100),
+    created_at                                           TIMESTAMPTZ   NOT NULL,
+    created_by                                             VARCHAR(100)  NOT NULL,
+    updated_at                                               TIMESTAMPTZ   NOT NULL,
+    updated_by                                                 VARCHAR(100)  NOT NULL,
+    version                                                      BIGINT        NOT NULL DEFAULT 0,
+
+    CONSTRAINT uq_packages_code UNIQUE (code)
+);
+
+CREATE INDEX idx_packages_motor_insurance_type_id ON packages(motor_insurance_type_id);
+CREATE INDEX idx_packages_package_cover_id        ON packages(package_cover_id);
+
+COMMENT ON TABLE packages IS 'แพ็กเกจประกันภัยพร้อมราคา — motor_insurance_type_id มาจาก i_pol_type เดิม, package_cover_id มาจาก i_pattern_cover เดิม (trim แล้ว join)';
+
+-- seed จากข้อมูลจริง legacy master.Package (6 แถว)
+INSERT INTO packages (code, name, risc_code, motor_insurance_type_id, usage_code, pattern_code, package_cover_id, business_line, type_code, net_amount, duty_amount, tax_amount, gross_amount, base_amount, cover_main_amount, prem_app_amount, disc_f_amount, disc_drv_amount, disc_grp_percent, disc_grp_amount, disc_rec_percent, disc_rec_amount, disc_oth_percent, disc_oth_amount, disc_cctv_percent, disc_cctv_amount, add_rec_percent, add_rec_amount, effective_from, effective_to, min_car_age, max_car_age, active_flag, cancelled_at, cancelled_by, created_at, created_by, updated_at, updated_by)
+VALUES
+    ('2403OL001', '3SAVE 2004320 รถเก๋ง 2500', '2004320', (SELECT id FROM motor_insurance_types WHERE code = '3'), '110', '320', (SELECT id FROM package_covers WHERE code = '2004110'), '310', '30', 2326.45, 10.00, 163.55, 2500.00, 0.00, 2121.16, 1110.02, 0.00, 0.00, 10.00, 323.12, 20.00, 581.61, NULL, 0.00, NULL, 0.00, NULL, 0.00, '2024-01-01', '2026-04-28', 1, 50, FALSE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('2403OL002', '3SAVE 2004320 รถบรรทุก 3500', '2004320', (SELECT id FROM motor_insurance_types WHERE code = '3'), '320', '320', (SELECT id FROM package_covers WHERE code = '2004320'), '310', '30', 3257.03, 14.00, 228.97, 3500.00, 0.00, 3273.69, 1249.97, 0.00, 0.00, 10.00, 452.37, 20.00, 814.26, NULL, 0.00, NULL, 0.00, NULL, 0.00, '2024-01-01', '2026-04-28', 1, 50, FALSE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('2403OL003', '3SAVE 2303320 รถเก๋ง 1999', '2303320', (SELECT id FROM motor_insurance_types WHERE code = '3'), '110', '320', (SELECT id FROM package_covers WHERE code = '2303110'), '310', '30', 1860.22, 8.00, 130.78, 1999.00, 0.00, 2543.34, 40.30, 0.00, 0.00, 10.00, 258.36, 20.00, 465.06, NULL, 0.00, NULL, 0.00, NULL, 0.00, '2024-01-01', '2026-04-28', 1, 50, FALSE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('2403OL004', '3SAVE 2303320 รถบรรทุก 2999', '2303320', (SELECT id FROM motor_insurance_types WHERE code = '3'), '320', '320', (SELECT id FROM package_covers WHERE code = '2303320'), '310', '30', 2790.80, 12.00, 196.20, 2999.00, 0.00, 3835.68, 40.43, 0.00, 0.00, 10.00, 387.61, 20.00, 697.70, NULL, 0.00, NULL, 0.00, NULL, 0.00, '2024-01-01', '2026-04-28', 1, 50, FALSE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('2403OL005', '3 SAVE 26043SOL รหัส 110 ราคา 2500', '26043SOL', (SELECT id FROM motor_insurance_types WHERE code = '3'), '110', '320', (SELECT id FROM package_covers WHERE code = '2604110'), '310', '30', 2326.45, 10.00, 163.55, 2500.00, 0.00, 3051.45, 180.00, 0.00, 0.00, 10.00, 323.00, 20.00, 582.00, NULL, 0.00, NULL, 0.00, NULL, 0.00, '2025-04-25', '2030-12-31', 1, 50, TRUE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('2403OL006', '3 SAVE 26043SOL รหัส 320 ราคา 3800', '26043SOL', (SELECT id FROM motor_insurance_types WHERE code = '3'), '320', '320', (SELECT id FROM package_covers WHERE code = '2604320'), '310', '30', 3536.40, 15.00, 248.60, 3800.00, 0.00, 3356.40, 180.00, 0.00, 0.00, 10.00, 0.00, 20.00, 0.00, 0.00, 0.00, NULL, 0.00, NULL, 0.00, '2025-04-25', '2030-12-31', 1, 50, TRUE, NULL, NULL, now(), 'SYSTEM', now(), 'SYSTEM');

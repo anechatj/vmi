@@ -1,0 +1,40 @@
+CREATE TABLE statuses (
+    id             UUID          PRIMARY KEY DEFAULT uuidv7(),
+    code           VARCHAR(30)   NOT NULL,
+    name_th        VARCHAR(100)  NOT NULL,
+    name_en        VARCHAR(100),
+    status_group   VARCHAR(30)   NOT NULL,
+    order_position INT           NOT NULL DEFAULT 0,
+    active_flag    BOOLEAN       NOT NULL DEFAULT TRUE,
+    created_at     TIMESTAMPTZ   NOT NULL,
+    created_by     VARCHAR(100)  NOT NULL,
+    updated_at     TIMESTAMPTZ   NOT NULL,
+    updated_by     VARCHAR(100)  NOT NULL,
+    version        BIGINT        NOT NULL DEFAULT 0,
+    CONSTRAINT uq_statuses_code UNIQUE (code)
+);
+
+CREATE INDEX idx_statuses_status_group ON statuses(status_group);
+
+COMMENT ON TABLE statuses IS 'ข้อมูลอ้างอิงสถานะ workflow ของใบสมัคร/กรมธรรม์ — status_group แยกกลุ่ม (VMI_APPLICATION = สถานะใบสมัคร, VMI_FLOW = ขั้นตอนการอนุมัติ) — legacy master.Status ไม่มี name_en และมี cancelled_at/cancelled_by ที่เป็น NULL ทุกแถวเสมอ จึงไม่ carry มาด้วย';
+
+-- seed จากข้อมูลจริง legacy master.Status (17 แถว)
+INSERT INTO statuses (code, name_th, status_group, order_position, active_flag, created_at, created_by, updated_at, updated_by)
+VALUES
+    ('DRAFT', 'บันทึกร่าง', 'VMI_APPLICATION', 1, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('PENDING', 'รอดำเนินการ', 'VMI_APPLICATION', 2, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('APPROVED', 'อนุมัติแล้ว', 'VMI_APPLICATION', 3, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('REJECTED', 'ไม่อนุมัติ', 'VMI_APPLICATION', 4, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('ISSUED', 'ออกกรมธรรม์แล้ว', 'VMI_APPLICATION', 5, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('CANCELLED', 'ยกเลิก', 'VMI_APPLICATION', 6, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('RENEWED', 'ต่ออายุแล้ว', 'VMI_APPLICATION', 7, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('REQUEST', 'ยื่นคำขอ', 'VMI_FLOW', 1, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('UW_REVIEW', 'พิจารณารับประกัน', 'VMI_FLOW', 2, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('APPROVE', 'อนุมัติ', 'VMI_FLOW', 3, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('REJECT', 'ปฏิเสธ', 'VMI_FLOW', 4, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('POLICY_ISSUE', 'ออกกรมธรรม์', 'VMI_FLOW', 5, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('CANCEL', 'ยกเลิกกรมธรรม์', 'VMI_FLOW', 6, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('CANCEL_REQUESTED', 'ขอยกเลิก', 'VMI_APPLICATION', 8, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('CANCEL_PENDING', 'รออนุมัติยกเลิก', 'VMI_APPLICATION', 9, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('RETURNED', 'รอแก้ไข', 'VMI_APPLICATION', 10, TRUE, now(), 'SYSTEM', now(), 'SYSTEM'),
+    ('WITHDRAWN', 'ถอน', 'VMI_APPLICATION', 11, TRUE, now(), 'SYSTEM', now(), 'SYSTEM');

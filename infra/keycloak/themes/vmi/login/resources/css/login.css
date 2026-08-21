@@ -1,13 +1,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap');
 
 :root {
-  --vmi-navy: #0b2942;
-  --vmi-teal: #0f766e;
-  --vmi-blue: #2563eb;
-  --vmi-blue-dark: #1d4ed8;
-  --vmi-text: #1e293b;
-  --vmi-muted: #64748b;
-  --vmi-border: #e2e8f0;
+  --vmi-primary: #263baa;
+  --vmi-primary-dark: #1c2c82;
+  --vmi-primary-soft: rgba(38, 59, 170, 0.12);
+  --vmi-cream: #fff4d6;
+  --vmi-cream-deep: #fbe6ab;
+  --vmi-text: #1c2340;
+  --vmi-muted: #6b6350;
+  --vmi-border: #ecdfba;
 }
 
 * {
@@ -44,8 +45,8 @@ body {
   align-items: center;
   justify-content: center;
   padding: 48px 16px;
-  background: radial-gradient(circle at 15% 15%, #123a58 0%, transparent 45%),
-    linear-gradient(135deg, var(--vmi-navy) 0%, #114358 45%, var(--vmi-teal) 100%) !important;
+  background: radial-gradient(circle at 85% 12%, var(--vmi-cream-deep) 0%, transparent 50%),
+    linear-gradient(160deg, var(--vmi-cream) 0%, #fff9e8 55%, var(--vmi-cream) 100%) !important;
   background-attachment: fixed !important;
 }
 
@@ -60,7 +61,7 @@ body {
 }
 
 #kc-header-wrapper {
-  color: #ffffff;
+  color: var(--vmi-primary);
   font-size: 26px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -71,10 +72,10 @@ body {
 #kc-header-wrapper::before {
   content: '';
   display: block;
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   margin: 0 auto 12px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2L4 5.2V11c0 5.7 3.2 10.4 8 11.6 4.8-1.2 8-5.9 8-11.6V5.2L12 2Z' fill='%2338BDF8'/%3E%3Cpath d='M9 12.2l2 2 4.5-4.7' stroke='%23FFFFFF' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M12 2L4 5.2V11c0 5.7 3.2 10.4 8 11.6 4.8-1.2 8-5.9 8-11.6V5.2L12 2Z' fill='%23263BAA'/%3E%3Cpath d='M9 12.2l2 2 4.5-4.7' stroke='%23FFF4D6' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -88,7 +89,7 @@ body {
   font-weight: 400;
   letter-spacing: normal;
   text-transform: none;
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(28, 35, 64, 0.62);
 }
 
 /* --- Card --- */
@@ -99,7 +100,7 @@ body {
   border: none;
   border-radius: 16px;
   padding: 36px 32px 32px;
-  box-shadow: 0 20px 45px -12px rgba(11, 41, 66, 0.45), 0 0 0 1px rgba(255, 255, 255, 0.06);
+  box-shadow: 0 20px 45px -12px rgba(38, 59, 170, 0.22), 0 0 0 1px rgba(38, 59, 170, 0.05);
 }
 
 .login-pf-header {
@@ -144,7 +145,7 @@ input[type='email'] {
   padding: 0 14px;
   font-size: 15px;
   color: var(--vmi-text);
-  background: #f8fafc;
+  background: #fffaf0;
   border: 1px solid var(--vmi-border) !important;
   border-radius: 10px;
   box-shadow: none !important;
@@ -162,8 +163,8 @@ input[aria-invalid='true'] {
 input:focus {
   outline: none;
   background: #ffffff;
-  border-color: var(--vmi-blue) !important;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15) !important;
+  border-color: var(--vmi-primary) !important;
+  box-shadow: 0 0 0 3px var(--vmi-primary-soft) !important;
 }
 
 .pf-c-input-group {
@@ -171,13 +172,13 @@ input:focus {
   align-items: stretch;
   border: 1px solid var(--vmi-border);
   border-radius: 10px;
-  background: #f8fafc;
+  background: #fffaf0;
   overflow: hidden;
 }
 
 .pf-c-input-group:focus-within {
-  border-color: var(--vmi-blue);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+  border-color: var(--vmi-primary);
+  box-shadow: 0 0 0 3px var(--vmi-primary-soft);
 }
 
 .pf-c-input-group .pf-c-form-control {
@@ -211,7 +212,7 @@ button.pf-c-button.pf-m-control:hover {
 }
 
 .login-pf-settings a {
-  color: var(--vmi-blue);
+  color: var(--vmi-primary);
   text-decoration: none;
 }
 
@@ -231,8 +232,8 @@ input[type='submit'] {
   height: 46px;
   border: none;
   border-radius: 10px;
-  background: linear-gradient(135deg, var(--vmi-blue) 0%, var(--vmi-blue-dark) 100%);
-  color: #ffffff;
+  background: linear-gradient(135deg, var(--vmi-primary) 0%, var(--vmi-primary-dark) 100%);
+  color: var(--vmi-cream);
   font-size: 15px;
   font-weight: 600;
   letter-spacing: 0.01em;

@@ -1,6 +1,6 @@
 -- legacy master.LicenseProvince มี province_id (FK จริงไป province) และ license_province_risc_id
 -- (external ID crosswalk สำหรับส่งรายงานให้ RISC) — เพิ่ม column เก็บไว้
-ALTER TABLE car_license_provinces ADD COLUMN province_id UUID REFERENCES provinces(id);
+ALTER TABLE car_license_provinces ADD COLUMN province_id BIGINT REFERENCES provinces(id);
 ALTER TABLE car_license_provinces ADD COLUMN risc_code VARCHAR(20);
 
 CREATE INDEX idx_car_license_provinces_province_id ON car_license_provinces(province_id);

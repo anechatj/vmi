@@ -111,6 +111,8 @@ Realm `vmi` (client `vmi-web`, role `policy-officer`/`admin`) **import อัต
 > docker compose -f infra/docker/docker-compose.local.yml --env-file infra/docker/.env up -d
 > ```
 
+> **Troubleshoot**: ช่วง pre-launch นี้ migration ใน `db/migration` บางไฟล์ถูก**แก้เนื้อหาย้อนหลัง**ไปแล้ว (ไม่ใช่แค่เพิ่มไฟล์ใหม่ต่อท้าย) เช่นตอนสลับ master table ทั้งหมดจาก UUID เป็น `BIGINT GENERATED AS IDENTITY` — ถ้า pull มาแล้ว backend ขึ้น error แนว `FlywayValidateException` / `checksum mismatch` แปลว่าเครื่องนี้เคย apply migration ชุดเก่าไปแล้วก่อนไฟล์ถูกแก้ วิธีแก้เหมือน troubleshoot ด้านบนทุกประการ — ลบ volume ทิ้งแล้วให้ migrate ใหม่จากไฟล์ปัจจุบัน (ไม่มีข้อมูลจริงที่ต้องเก็บในเฟสนี้ ทุกอย่าง reproduce ได้จาก migration + seed data เดิม)
+
 ## Phase 5: สร้าง test user (Keycloak ไม่ export user ให้ ต้องสร้างใหม่ทุกเครื่อง)
 
 ```bash
